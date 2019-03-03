@@ -75,7 +75,7 @@ A `NameError` is raised when a constant cannot be found or when a constant is al
 ## See Also
 
 * [aliased](https://metacpan.org/pod/aliased) - The Perl module that served as inspiration
-* [require2](https://github.com/sshaw/require2) - `Kernel#require` something and make it accessible via a different namespace
+* [require3](https://github.com/sshaw/require3) - `Kernel#require` something and make it accessible via a different namespace
 * [class2](https://github.com/sshaw/class2) - Easily create hierarchies that support nested attributes, type conversion, serialization and more
 
 ## Author
