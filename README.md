@@ -27,7 +27,7 @@ The namespace can also be a `String`.
 
 To alias everything in the namespace to the top-level:
 ```rb
-alias2 Some::Very::Long::Name::Here, "*""
+alias2 Some::Very::Long::Name::Here, "*"
 ```
 
 Same as above:
@@ -46,14 +46,14 @@ Same as:
 ```rb
 FooHoo = Some::Very::Long::Name::Here::Foo
 BarHar = Some::Very::Long::Name::Here::Bar
-Bazzzz = Some::Very::Long::Name::Here::Bar
+Bazzzz = Some::Very::Long::Name::Here::Baz
 ```
 
 Keys can also be `String`s.
 
-You can filter or transform the alias:
+You can filter the classes/modules to alias:
 ```rb
-alias2 Some::Very::Long::Name::Here do |klass|
+alias2 Some::Very::Long::Name::Here, "*" do |klass|
   klass < ActiveRecord::Base
 end
 ```
@@ -65,7 +65,7 @@ Bar = Some::Very::Long::Name::Here::Bar if Some::Very::Long::Name::Here::Bar.is_
 Baz = Some::Very::Long::Name::Here::Baz if Some::Very::Long::Name::Here::Baz.is_a?(ActiveRecord::Base)
 ```
 
-No aliases were given, this implies an alias of `"*"`, but you can supply as `Hash` as well.
+When a block is given you can omit the alias. It will default to `"*"`.
 
 The block can also return an alias:
 ```rb
@@ -76,7 +76,7 @@ end
 
 This is the same as:
 ```rb
-Foo_X = Some::Very::Long::Name::Here::Foo if Some::Very::Long::Name::Here::Foo.name.end_with?("Foo_X")
+Foo_X = Some::Very::Long::Name::Here::Foo if Some::Very::Long::Name::Here::Foo.name.end_with?("Foo")
 Bar = Some::Very::Long::Name::Here::Bar
 Baz = Some::Very::Long::Name::Here::Baz
 ```
@@ -112,7 +112,8 @@ In all cases the original namespace is not modified and remains in scope.
 
 ### Errors
 
-A `NameError` is raised when a constant cannot be found or when a constant is already defined.
+- `NameError` - raised when a constant cannot be found or when a constant is already defined
+- `ArgumentError` - raised when an alias list or block is not provided
 
 ## See Also
 
