@@ -51,7 +51,7 @@ Bazzzz = Some::Very::Long::Name::Here::Baz
 
 Keys can also be `String`s.
 
-You can filter the classes/modules to alias:
+You can filter the classes/modules to alias. Here, only subclasses of `ActiveRecord::Base` will be aliased:
 ```rb
 alias2 Some::Very::Long::Name::Here, "*" do |klass|
   klass < ActiveRecord::Base
