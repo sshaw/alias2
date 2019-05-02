@@ -25,6 +25,18 @@ Baz = Some::Very::Long::Name::Here::Baz
 
 The namespace can also be a `String`.
 
+To alias everything in the namespace to the top-level:
+```rb
+alias2 Some::Very::Long::Name::Here, "*""
+```
+
+Same as above:
+```rb
+Foo = Some::Very::Long::Name::Here::Foo
+Bar = Some::Very::Long::Name::Here::Bar
+Baz = Some::Very::Long::Name::Here::Baz
+```
+
 If you'd like to alias them using a different name you can:
 ```rb
 alias2 Some::Very::Long::Name::Here, :Foo => "FooHoo", :Bar => "BarHar", :Baz => "Bazzzz"
@@ -39,7 +51,37 @@ Bazzzz = Some::Very::Long::Name::Here::Bar
 
 Keys can also be `String`s.
 
-The target can be a namespace you want created:
+You can filter or transform the alias:
+```rb
+alias2 Some::Very::Long::Name::Here do |klass|
+  klass < ActiveRecord::Base
+end
+```
+
+The above is the same as:
+```rb
+Foo = Some::Very::Long::Name::Here::Foo if Some::Very::Long::Name::Here::Foo.is_a?(ActiveRecord::Base)
+Bar = Some::Very::Long::Name::Here::Bar if Some::Very::Long::Name::Here::Bar.is_a?(ActiveRecord::Base)
+Baz = Some::Very::Long::Name::Here::Baz if Some::Very::Long::Name::Here::Baz.is_a?(ActiveRecord::Base)
+```
+
+No aliases were given, this implies an alias of `"*"`, but you can supply as `Hash` as well.
+
+The block can also return an alias:
+```rb
+alias2 Some::Very::Long::Name::Here do |klass|
+  klass.name.end_with?("Foo") ? "Foo_X" : klass.name.split("::")[-1]
+end
+```
+
+This is the same as:
+```rb
+Foo_X = Some::Very::Long::Name::Here::Foo if Some::Very::Long::Name::Here::Foo.name.end_with?("Foo_X")
+Bar = Some::Very::Long::Name::Here::Bar
+Baz = Some::Very::Long::Name::Here::Baz
+```
+
+An alias' target can also be a namespace you want created:
 ```rb
 alias2 Some::Very::Long::Name::Here, :Foo => "New::Namespace::SameFoo", :Bar => "BarHar"
 ```

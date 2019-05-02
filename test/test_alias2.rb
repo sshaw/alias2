@@ -104,4 +104,63 @@ class TestAlias2 < MiniTest::Test
 
     assert_equal "constant A::Baz is already defined", ex.message
   end
+
+  def test_with_target_of_astrisk
+    alias2 A::B, "*"
+
+    assert Object.const_defined?("Bar")
+    assert Object.const_defined?("Foo")
+    assert !Object.const_defined?("X")
+  end
+
+  def test_with_filter_only_filtered_modules_aliased
+    alias2 A::B do |klass|
+      klass == A::B::Foo
+    end
+
+    assert Object.const_defined?("A::B::Foo")
+    assert Object.const_defined?("Foo")
+    assert_equal A::B::Foo, Foo
+
+    assert !Object.const_defined?("Bar")
+    assert !Object.const_defined?("X")
+  end
+
+  def test_with_filter_only_modules_filtered
+    seen = []
+    alias2 A::B do |klass|
+      seen << klass
+      true
+    end
+
+    # A::B::X is an Integer constant
+    assert_equal [A::B::Bar, A::B::Foo], seen
+  end
+
+  def test_with_filter_and_aliases_only_filtered_modules_aliased
+    alias2 A::B, "Foo" => "X1", "Bar" => "X2" do |klass|
+      klass == A::B::Foo
+    end
+
+    assert Object.const_defined?("A::B::Foo")
+    assert Object.const_defined?("X1")
+    assert_equal A::B::Foo, X1
+
+    assert Object.const_defined?("A::B::Bar")
+    assert !Object.const_defined?("X2")
+  end
+
+  def test_with_filter_with_alias_returned_uses_alias
+    alias2 A::B, "Foo" => "X1", "Bar" => "X2" do |klass|
+      klass == A::B::Foo ? "X_1" : "X_2"
+    end
+
+    assert Object.const_defined?("A::B::Foo")
+    assert Object.const_defined?("X_1")
+    assert_equal A::B::Foo, X_1
+
+    assert Object.const_defined?("A::B::Bar")
+    assert Object.const_defined?("X_2")
+    assert_equal A::B::Bar, X_2
+  end
 end
